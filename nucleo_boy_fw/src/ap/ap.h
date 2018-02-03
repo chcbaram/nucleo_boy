@@ -21,9 +21,6 @@
 
 
 
-#include "cmd/cmd.h"
-#include "boot/boot.h"
-
 
 void apInit(void);
 void apMain(void);

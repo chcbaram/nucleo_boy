@@ -4,8 +4,9 @@
  *  Created on: 2016. 7. 13.
  *      Author: Baram
  */
-#include "lcd/st7735.h"
 #include "hw.h"
+#include "st7735.h"
+
 
 #ifdef _USE_HW_ST7735
 
@@ -16,9 +17,6 @@
 
 
 
-#define _PIN_DEF_DC     0
-#define _PIN_DEF_CS     1
-#define _PIN_DEF_RST    2
 
 
 #define MADCTL_MY  0x80
@@ -247,7 +245,7 @@ void st7735Init(void)
 
   spiBegin(_DEF_SPI1);
   spiSetBitOrder(_DEF_SPI1, SPI_FIRSTBIT_MSB);
-  spiSetClockDivider(_DEF_SPI1, SPI_BAUDRATEPRESCALER_2);
+  spiSetClockDivider(_DEF_SPI1, SPI_BAUDRATEPRESCALER_4);
   spiSetDataMode(_DEF_SPI1, SPI_MODE0);
 
 
@@ -256,7 +254,7 @@ void st7735Init(void)
 #if _TFTHEIGHT == 128
   st7735InitRegs(Rcmd2green144);
 #else
-  st7735InitRegs(Rcmd2green);
+  st7735InitRegs(Rcmd2red);
 #endif
 
   st7735InitRegs(Rcmd3);
@@ -443,6 +441,50 @@ void st7735SetAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
   st7735WriteCommand(ST7735_RAMWR); // write to RAM
 }
 
+void st7735drawBufferedLine(int16_t x, int16_t y, uint16_t *buffer, uint16_t w)
+{
+
+
+  //create a local buffer line not to mess up the source
+  uint16_t bufferedLine[w];
+  for (uint16_t i = 0; i < w; i++) {
+    uint16_t color = buffer[i];
+    color = (color << 8) | (color >> 8); //change endianness
+    bufferedLine[i] = color;
+  }
+
+  st7735SetAddrWindow(x, y, x + w - 1, y + 1);
+
+
+  st7735WritePin(_PIN_DEF_DC, _DEF_HIGH);
+  st7735WritePin(_PIN_DEF_CS, _DEF_LOW);
+
+  spiDmaTransfer(_DEF_SPI1, bufferedLine, w*2, 100);
+
+  st7735WritePin(_PIN_DEF_CS, _DEF_HIGH);
+}
+
+void st7735drawBuffer(int16_t x, int16_t y, uint16_t *buffer, uint16_t w, uint16_t h)
+{
+
+
+  st7735SetAddrWindow(x, y, x + w - 1, y + h - 1);
+
+
+  st7735WritePin(_PIN_DEF_DC, _DEF_HIGH);
+  st7735WritePin(_PIN_DEF_CS, _DEF_LOW);
+
+  spiDmaTransfer(_DEF_SPI1, buffer, w*h*2, 100);
+
+  st7735WritePin(_PIN_DEF_CS, _DEF_HIGH);
+
+}
+
+void st7735sendBuffer(uint16_t *buffer, uint16_t n)
+{
+  spiDmaTransfer(_DEF_SPI1, buffer, n*2, 0);
+}
+
 void st7735DrawFrame(bool wait)
 {
   if (wait == true)
@@ -493,6 +535,5 @@ void st7735FillRect(int16_t x, int16_t y, int16_t w, int16_t h,  uint16_t color)
     }
   }
 }
-
 
 #endif

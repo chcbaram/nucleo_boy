@@ -17,14 +17,14 @@ void hwInit(void)
   cmdifInit();
   swtimerInit();
   hwtimerInit();
-  ledInit();
+  //ledInit();
   microsInit();
   uartInit();
   buttonInit();
   flashInit();
   spiInit();
   lcdInit();
-  //dacInit();
+
 
   // 1ms for swtimer
   //

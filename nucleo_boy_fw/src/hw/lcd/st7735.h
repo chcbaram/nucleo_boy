@@ -21,6 +21,12 @@
 #ifdef _USE_HW_ST7735
 
 
+#define _PIN_DEF_DC     0
+#define _PIN_DEF_CS     1
+#define _PIN_DEF_RST    2
+
+
+
 #define INITR_GREENTAB 0x0
 #define INITR_REDTAB   0x1
 #define INITR_BLACKTAB   0x2
@@ -113,6 +119,13 @@ void st7735SetRotation(uint8_t mode);
 
 uint16_t st7735GetWidth(void);
 uint16_t st7735GetHeight(void);
+
+void st7735drawBufferedLine(int16_t x, int16_t y, uint16_t *buffer, uint16_t w);
+void st7735drawBuffer(int16_t x, int16_t y, uint16_t *buffer, uint16_t w, uint16_t h);
+void st7735sendBuffer(uint16_t *buffer, uint16_t n);
+
+void st7735SetAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
+void st7735WritePin(uint8_t pin_num, uint8_t pin_state);
 
 #endif
 

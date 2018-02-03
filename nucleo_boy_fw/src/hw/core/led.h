@@ -9,6 +9,8 @@
 #define LED_H
 
 
+#ifdef _USE_HW_LED
+
 #ifdef __cplusplus
  extern "C" {
 #endif
@@ -17,7 +19,6 @@
 
 #include "def.h"
 #include "bsp.h"
-
 
 
 #define LED_CH_MAX      1
@@ -38,5 +39,6 @@ void ledToggle(uint8_t ch);
 }
 #endif
 
+#endif
 
 #endif

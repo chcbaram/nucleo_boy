@@ -5,6 +5,8 @@
  *      Author: Baram
  */
 #include "hw.h"
+
+#ifdef _USE_HW_LED
 #include "led.h"
 
 
@@ -38,9 +40,9 @@ void ledInit(void)
 
   for (i=0; i<LED_CH_MAX; i++)
   {
-    //GPIO_InitStruct.Pin  = led_port_tbl[i].pin_number;
-    //GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    //HAL_GPIO_Init(led_port_tbl[i].port, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin  = led_port_tbl[i].pin_number;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(led_port_tbl[i].port, &GPIO_InitStruct);
 
     ledOff(i);
   }
@@ -53,21 +55,21 @@ void ledOn(uint8_t ch)
 {
   if (ch >= LED_CH_MAX) return;
 
-  //HAL_GPIO_WritePin(led_port_tbl[ch].port, led_port_tbl[ch].pin_number, led_port_tbl[ch].on_state);
+  HAL_GPIO_WritePin(led_port_tbl[ch].port, led_port_tbl[ch].pin_number, led_port_tbl[ch].on_state);
 }
 
 void ledOff(uint8_t ch)
 {
   if (ch >= LED_CH_MAX) return;
 
-  //HAL_GPIO_WritePin(led_port_tbl[ch].port, led_port_tbl[ch].pin_number, led_port_tbl[ch].off_state);
+  HAL_GPIO_WritePin(led_port_tbl[ch].port, led_port_tbl[ch].pin_number, led_port_tbl[ch].off_state);
 }
 
 void ledToggle(uint8_t ch)
 {
   if (ch >= LED_CH_MAX) return;
 
-  //HAL_GPIO_TogglePin(led_port_tbl[ch].port, led_port_tbl[ch].pin_number);
+  HAL_GPIO_TogglePin(led_port_tbl[ch].port, led_port_tbl[ch].pin_number);
 }
 
 
@@ -122,3 +124,5 @@ int ledCmdif(int argc, char **argv)
 
   return 0;
 }
+
+#endif

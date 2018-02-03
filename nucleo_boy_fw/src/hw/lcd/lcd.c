@@ -4,8 +4,8 @@
  *  Created on: 2016. 7. 13.
  *      Author: Baram
  */
-#include "lcd/lcd.h"
 #include "hw.h"
+#include "lcd.h"
 #include "st7735.h"
 
 
