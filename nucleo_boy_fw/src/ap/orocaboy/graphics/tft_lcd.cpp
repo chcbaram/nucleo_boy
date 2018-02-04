@@ -191,7 +191,7 @@ void tftLCD::drawImage(int16_t x, int16_t y, Image& img, int16_t w2, int16_t h2)
 	}
 
 	//no scaling
-	if ((w == w2) && (h == h2)) { 
+	if ((w == w2) && (h == h2)) {
 		drawImage(x, y, img);
 		return;
 	}
